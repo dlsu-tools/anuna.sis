@@ -6,6 +6,7 @@ export default {
             fontFamily: {
                 geist: ["Geist", "sans-serif"],
                 geistMono: ["'Geist Mono'", "monospace"],
+                fugazOne: ['"Fugaz One"', "sans-serif"],
             },
         },
     },

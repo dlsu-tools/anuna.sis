@@ -1,6 +1,21 @@
 <script lang="ts">
+    import SignedIn from "./SignedIn.svelte";
+
     import PhotoCopyright from "./PhotoCopyright.svelte";
     import SignIn from "./SignIn.svelte";
+
+    import { supabase } from "$lib/supabaseClient";
+    import { onMount } from "svelte";
+    import { writable } from "svelte/store";
+    import type { Session } from "@supabase/supabase-js";
+
+    const authStore = writable<Session | null>(null);
+    onMount(() => {
+        const auth = supabase.auth.onAuthStateChange((event, session) => {
+            authStore.set(session);
+        });
+        return auth.data.subscription.unsubscribe;
+    });
 </script>
 
 <div class="relative h-screen" id="herobg">
@@ -13,7 +28,11 @@
         </h1>
         <div class="flex basis-2/6 flex-col items-center justify-center">
             <div class="flex w-[90%] flex-col place-items-center rounded-md p-10">
-                <SignIn></SignIn>
+                {#if $authStore}
+                    <SignedIn></SignedIn>
+                {:else}
+                    <SignIn></SignIn>
+                {/if}
             </div>
         </div>
     </div>

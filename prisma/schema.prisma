@@ -1,0 +1,230 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model colleges {
+  id      Int    @id @db.SmallInt
+  name    String
+  acronym String
+}
+
+model completedCourses {
+  id            Int      @id
+  user          Int?
+  courseCode    Int?
+  termCompleted Decimal? @db.Decimal(4, 0)
+  credited      Boolean? @default(false)
+}
+
+model contacts {
+  id       Int     @id
+  platform Int?    @db.SmallInt
+  link     String?
+}
+
+model corequisites {
+  id      Int @id
+  courseA Int
+  courseB Int
+}
+
+model courseCodes {
+  id        Int      @id
+  code      String   @db.Char(6)
+  fullName  String?
+  units     Int?
+  academic  Boolean? @default(true)
+  isGeneric Boolean? @default(false)
+}
+
+model courseEnrollment {
+  id    Int  @id
+  user  Int?
+  class Int?
+}
+
+model courseEquivalents {
+  id      Int @id
+  courseA Int
+  courseB Int
+}
+
+model dissolvedSections {
+  id         Int       @id
+  section    Int?
+  timestamp  DateTime? @db.Timestamp(6)
+  declaredBy String?
+}
+
+model enlistmentTimes {
+  id              Int       @id
+  batch           Int?
+  batchBelow      Boolean?  @default(false)
+  college         Int?      @db.SmallInt
+  priorityLevel   Int?
+  enlistmentStart DateTime? @db.Timestamp(6)
+}
+
+model faculty {
+  id       Int     @id
+  lastName String?
+  name     String?
+}
+
+model friends {
+  id    Int @id
+  userA Int
+  userB Int
+}
+
+model platforms {
+  id       Int     @id @db.SmallInt
+  platform String?
+}
+
+model prerequisites {
+  id        Int      @id
+  course    Int?
+  requisite Int?
+  minGrade  Decimal? @db.Decimal(2, 1)
+}
+
+model primarySchedules {
+  id       Int  @id
+  user     Int? @unique
+  schedule Int
+}
+
+model priorityStatuses {
+  id     Int    @id
+  status String
+}
+
+model programEnrollment {
+  id      Int      @id
+  user    Int?
+  program Int?
+  isMinor Boolean? @default(false)
+}
+
+model programRequirements {
+  id             Int      @id
+  program        Int?
+  course         Int?
+  prescribedTerm Decimal? @db.Decimal(4, 0)
+}
+
+model programTypes {
+  id   Int     @id
+  text String?
+}
+
+model programs {
+  id   Int    @id
+  name String
+  type Int?
+}
+
+model scheduleMembership {
+  id           Int       @id
+  userId       Int?
+  scheduleId   Int?
+  role         Int?
+  lastModified DateTime? @db.Date
+}
+
+model scheduleRole {
+  id   Int     @id
+  type String?
+}
+
+model scheduleSlots {
+  id       Int @id
+  schedule Int
+  section  Int
+}
+
+model schedules {
+  id          Int       @id
+  dateCreated DateTime? @db.Date
+}
+
+model sectionSchedule {
+  id        Int       @id
+  class     Int?
+  day       String?   @db.Char(1)
+  startTime DateTime? @db.Time(6)
+  endTime   DateTime? @db.Time(6)
+  room      String?
+}
+
+model sections {
+  id          Int      @id
+  classNumber Int?
+  faculty     Int?
+  section     String?
+  courseCode  Int
+  enrollment  Int?     @default(0)
+  capacity    Int?
+  remarks     String?
+  term        Decimal? @db.Decimal(4, 0)
+}
+
+model stats_sectionPopularity {
+  id             Int       @id
+  section        Int?
+  timestamp      DateTime? @db.Timestamp(6)
+  schedulesCount Int?
+}
+
+model stats_sectionPopulation {
+  id        Int       @id
+  section   Int?
+  capacity  Int?
+  enrolled  Int?
+  timestamp DateTime? @db.Timestamp(6)
+}
+
+model userDayPreferences {
+  id              Int     @id
+  user            Int?
+  day             String? @db.Char(1)
+  preferenceLevel Int?    @db.SmallInt
+}
+
+model userFacultyPrefernces {
+  id             Int  @id
+  user           Int?
+  faculty        Int
+  prefernceLevel Int? @db.SmallInt
+}
+
+model userTimePrefernces {
+  id              Int       @id
+  user            Int?
+  startTime       DateTime? @db.Time(6)
+  endTime         DateTime? @db.Time(6)
+  preferenceLevel Int?      @db.SmallInt
+}
+
+model users {
+  id            Int      @id
+  dlsuId        Decimal? @unique @db.Decimal(8, 0)
+  firstName     String?
+  lastName      String?
+  homeCollege   Int?     @db.SmallInt
+  lagunaStudent Boolean? @default(false)
+  priorityLevel Int?
+}
+
+model watchSection {
+  id      Int  @id
+  user    Int?
+  section Int?
+}

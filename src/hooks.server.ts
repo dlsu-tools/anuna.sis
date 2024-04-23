@@ -78,7 +78,7 @@ const authGuard: Handle = async ({ event, resolve }) => {
         redirect(303, "/");
     }
 
-    const strictPublicRoutes: string[] = [];
+    const strictPublicRoutes: string[] = ["/publicOnly"];
     if (
         event.locals.session &&
         strictPublicRoutes.some((path) => event.url.pathname.startsWith(path))

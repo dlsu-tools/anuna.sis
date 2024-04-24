@@ -1,8 +1,8 @@
 <script lang="ts">
     import { supabase } from "$lib/supabaseClient";
 
-    function signOut() {
-        supabase.auth.signOut();
+    async function signOut() {
+        await supabase.auth.signOut();
     }
 </script>
 

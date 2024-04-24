@@ -1,21 +1,21 @@
-// See https://kit.svelte.dev/docs/types#app
-// for information about these interfaces
-
-import type { SupabaseClient, Session, User } from "@supabase/supabase-js";
+import { SupabaseClient, Session } from "@supabase/supabase-js";
+import { Database } from "./DatabaseDefinitions";
 
 declare global {
     namespace App {
-        // interface Error {}
         interface Locals {
-            // From https://supabase.com/docs/guides/auth/server-side/sveltekit
-            supabase: SupabaseClient;
-            safeGetSession: () => Promise<{ session: Session | null; user: User | null }>;
-            session: Session | null;
-            user: User | null;
-            // From https://supabase.com/docs/guides/auth/server-side/sveltekit
+            // From https://github.com/j4w8n/sveltekit-supabase-ssr
+            supabase: SupabaseClient<Database>;
+            getSession(): Promise<Session | null>;
+            // From https://github.com/j4w8n/sveltekit-supabase-ssr
         }
-        // interface PageData {}
-        // interface PageState {}
+        interface PageData {
+            // From https://github.com/j4w8n/sveltekit-supabase-ssr
+            session: Session | null;
+            supabase: SupabaseClient;
+            // From https://github.com/j4w8n/sveltekit-supabase-ssr
+        }
+        // interface Error {}
         // interface Platform {}
     }
 }

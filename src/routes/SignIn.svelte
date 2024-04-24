@@ -10,4 +10,6 @@
 </script>
 
 <!-- TODO: design -->
-<button class="bg-white" on:click={signIn}>Sign in!</button>
+<form method="POST">
+    <button class="bg-white" name="provider" value="dlsu">Sign in!</button>
+</form>

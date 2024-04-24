@@ -1,25 +1,14 @@
-// From https://supabase.com/docs/guides/auth/server-side/sveltekit
-
-import { createServerClient } from "@supabase/ssr";
-import { type Handle, redirect } from "@sveltejs/kit";
-import { sequence } from "@sveltejs/kit/hooks";
-
+// From https://github.com/j4w8n/sveltekit-supabase-ssr
 import { PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY } from "$env/static/public";
+import { createServerClient } from "@supabase/ssr";
+import type { Handle } from "@sveltejs/kit";
+import { SUPABASE_JWT } from "$env/static/private";
+import jwt from "jsonwebtoken";
 
-const supabase: Handle = async ({ event, resolve }) => {
-    /**
-     * Creates a Supabase client specific to this server request.
-     *
-     * The Supabase client gets the Auth token from the request cookies.
-     */
+export const handle: Handle = async ({ event, resolve }) => {
     event.locals.supabase = createServerClient(PUBLIC_SUPABASE_URL, PUBLIC_SUPABASE_ANON_KEY, {
         cookies: {
             get: (key) => event.cookies.get(key),
-            /**
-             * SvelteKit's cookies API requires `path` to be explicitly set in
-             * the cookie options. Setting `path` to `/` replicates previous/
-             * standard behavior.
-             */
             set: (key, value, options) => {
                 event.cookies.set(key, value, { ...options, path: "/" });
             },
@@ -30,66 +19,32 @@ const supabase: Handle = async ({ event, resolve }) => {
     });
 
     /**
-     * Unlike `supabase.auth.getSession()`, which returns the session _without_
-     * validating the JWT, this function also calls `getUser()` to validate the
-     * JWT before returning the session.
+     * We do not call `getUser()` here,
+     * since we're validating the JWT.
      */
-    event.locals.safeGetSession = async () => {
+    event.locals.getSession = async () => {
         const {
             data: { session },
+            // BUG: Console warning, to be fixed by Supabase:
+            // https://github.com/supabase/auth-js/issues/888
         } = await event.locals.supabase.auth.getSession();
-        if (!session) {
-            return { session: null, user: null };
+
+        if (!session) return null;
+
+        /* Ensures the session is valid. See README Security section for details. */
+        try {
+            jwt.verify(session.access_token, SUPABASE_JWT);
+        } catch (err) {
+            return null;
         }
 
-        const {
-            data: { user },
-            error,
-        } = await event.locals.supabase.auth.getUser();
-        if (error) {
-            // JWT validation has failed
-            return { session: null, user: null };
-        }
-
-        return { session, user };
+        return session;
     };
 
     return resolve(event, {
         filterSerializedResponseHeaders(name) {
-            /**
-             * Supabase libraries use the `content-range` header, so we need to
-             * tell SvelteKit to pass it through.
-             */
             return name === "content-range";
         },
     });
 };
-
-const authGuard: Handle = async ({ event, resolve }) => {
-    const { session, user } = await event.locals.safeGetSession();
-    event.locals.session = session;
-    event.locals.user = user;
-
-    const protectedRoutes: string[] = ["/users", "/private"];
-    if (
-        !event.locals.session &&
-        protectedRoutes.some((path) => event.url.pathname.startsWith(path))
-    ) {
-        console.warn("Unauthorized access to protected route", event.url.pathname);
-        redirect(303, "/");
-    }
-
-    const strictPublicRoutes: string[] = ["/publicOnly"];
-    if (
-        event.locals.session &&
-        strictPublicRoutes.some((path) => event.url.pathname.startsWith(path))
-    ) {
-        console.warn("Unauthorized access to public-only route", event.url.pathname);
-        redirect(303, "/");
-    }
-
-    return resolve(event);
-};
-
-export const handle: Handle = sequence(supabase, authGuard);
-// From https://supabase.com/docs/guides/auth/server-side/sveltekit
+// From https://github.com/j4w8n/sveltekit-supabase-ssr

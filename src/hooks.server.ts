@@ -75,6 +75,7 @@ const authGuard: Handle = async ({ event, resolve }) => {
         !event.locals.session &&
         protectedRoutes.some((path) => event.url.pathname.startsWith(path))
     ) {
+        console.warn("Unauthorized access to protected route", event.url.pathname);
         redirect(303, "/");
     }
 
@@ -83,6 +84,7 @@ const authGuard: Handle = async ({ event, resolve }) => {
         event.locals.session &&
         strictPublicRoutes.some((path) => event.url.pathname.startsWith(path))
     ) {
+        console.warn("Unauthorized access to public-only route", event.url.pathname);
         redirect(303, "/");
     }
 

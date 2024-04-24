@@ -14,10 +14,12 @@
                  * triggering function from completing
                  */
                 setTimeout(() => {
+                    console.warn("No session, redirecting to /");
                     goto("/", { invalidateAll: true });
                 });
             }
             if (newSession?.expires_at !== session?.expires_at) {
+                console.warn("Invalidated supabase:auth");
                 invalidate("supabase:auth");
             }
         });

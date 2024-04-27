@@ -21,6 +21,10 @@ export const handle: Handle = async ({ event, resolve }) => {
     /**
      * We do not call `getUser()` here,
      * since we're validating the JWT.
+     *
+     * !!! SECURITY WARNING !!!
+     * Cookies aren't validated properly, use getUser instead.
+     * For now, only validated user ID will be returned
      */
     event.locals.getSession = async () => {
         const {
@@ -33,12 +37,22 @@ export const handle: Handle = async ({ event, resolve }) => {
 
         /* Ensures the session is valid. See README Security section for details. */
         try {
-            jwt.verify(session.access_token, SUPABASE_JWT);
+            // BUG: Session is to be considered completely untrustworthy
+            // to be fixed in future patch by Supabase
+            const jwtResult = jwt.verify(session.access_token, SUPABASE_JWT);
+            return (jwtResult.sub as string) ?? null; // See security warning
         } catch (err) {
             return null;
         }
 
-        return session;
+        // return session;
+    };
+
+    event.locals.getUser = async () => {
+        const { data, error } = await event.locals.supabase.auth.getUser();
+
+        if (!data || error) return null;
+        return data.user;
     };
 
     return resolve(event, {

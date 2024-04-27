@@ -1,4 +1,4 @@
-import { SupabaseClient, Session } from "@supabase/supabase-js";
+import { SupabaseClient, Session, User } from "@supabase/supabase-js";
 import { Database } from "./DatabaseDefinitions";
 
 declare global {
@@ -6,15 +6,12 @@ declare global {
         interface Locals {
             // From https://github.com/j4w8n/sveltekit-supabase-ssr
             supabase: SupabaseClient<Database>;
-            getSession(): Promise<Session | null>;
+            // getSession(): Promise<Session | null>;
+            getSession(): Promise<string | null>; // BUG: Security issue, see hooks.sever.ts
+            getUser(): Promise<User | null>;
             // From https://github.com/j4w8n/sveltekit-supabase-ssr
         }
-        interface PageData {
-            // From https://github.com/j4w8n/sveltekit-supabase-ssr
-            session: Session | null;
-            supabase: SupabaseClient;
-            // From https://github.com/j4w8n/sveltekit-supabase-ssr
-        }
+        interface PageData {}
         // interface Error {}
         // interface Platform {}
     }

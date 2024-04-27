@@ -3,6 +3,9 @@
 
     import PhotoCopyright from "./PhotoCopyright.svelte";
     import SignIn from "./SignIn.svelte";
+
+    import type { PageData } from "./$types";
+    export let data: PageData;
 </script>
 
 <div class="relative h-screen" id="herobg">
@@ -15,7 +18,7 @@
         </h1>
         <div class="flex basis-2/6 flex-col items-center justify-center">
             <div class="flex w-[90%] flex-col place-items-center rounded-md p-10">
-                {#if false}
+                {#if data.hasSession}
                     <!-- TODO: fix detection-->
                     <SignedIn></SignedIn>
                 {:else}

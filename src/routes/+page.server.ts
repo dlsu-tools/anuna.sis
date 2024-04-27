@@ -1,5 +1,11 @@
-import type { Actions } from "./$types";
+import type { Actions, PageServerLoad } from "./$types";
 import { fail, redirect } from "@sveltejs/kit";
+
+export const load: PageServerLoad = async ({ locals: { getSession } }) => {
+    return {
+        hasSession: !!(await getSession()),
+    };
+};
 
 export const actions = {
     default: async ({ request, url, locals: { supabase } }) => {

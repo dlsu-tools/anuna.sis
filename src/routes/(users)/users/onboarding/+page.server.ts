@@ -1,8 +1,9 @@
 import type { PageServerLoad } from "./$types";
-import { error } from "@sveltejs/kit";
+import { error, redirect } from "@sveltejs/kit";
 
-export const load = (async ({ depends, locals: { supabase } }) => {
+export const load: PageServerLoad = async ({ depends, locals }) => {
     depends("supabase:db:users");
+    const { supabase } = locals;
 
     const {
         data: { user },
@@ -13,8 +14,15 @@ export const load = (async ({ depends, locals: { supabase } }) => {
 
     const { data } = await supabase.from("users").select("id").eq("email", user.email);
 
-    return {
-        hasOnBoarded: data?.length ?? 0 != 0,
-        supabase,
-    };
-}) satisfies PageServerLoad;
+    // check if onboarded
+    if ((data?.length ?? 0) > 0) redirect(303, "/users/dashboard");
+    return {};
+};
+
+import type { Actions } from "./$types";
+
+export const actions = {
+    default: async ({ request }) => {
+        const data = await request.formData();
+    },
+} satisfies Actions;

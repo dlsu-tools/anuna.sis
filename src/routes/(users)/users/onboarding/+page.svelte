@@ -1,8 +1,10 @@
 <script lang="ts">
-    import type { PageData } from "./$types";
-
-    export let data: PageData;
-    const { hasOnBoarded, supabase } = data;
 </script>
 
-onboarded: {hasOnBoarded}
+<form action="" method="post">
+    <!-- TODO: design -->
+    <label for="id"> id number </label>
+    <input type="text" name="id" id="id" />
+
+    <button>submit</button>
+</form>

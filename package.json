@@ -42,7 +42,10 @@
     "dependencies": {
         "@supabase/ssr": "^0.3.0",
         "@supabase/supabase-js": "^2.42.7",
+        "clsx": "^2.1.1",
         "jsdom": "^24.0.0",
-        "jsonwebtoken": "^9.0.2"
+        "jsonwebtoken": "^9.0.2",
+        "tailwind-merge": "^2.3.0",
+        "tailwind-variants": "^0.2.1"
     }
 }

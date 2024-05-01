@@ -1,4 +1,5 @@
 <script lang="ts">
+    import Separator from "$lib/components/ui/separator/separator.svelte";
     import Time from "./Time.svelte";
 
     type Days = "M" | "T" | "W" | "H" | "F" | "S";
@@ -21,6 +22,10 @@
 <!-- Time -->
 <div class="flex flex-col place-items-center">
     <Time {isFiller} time={timeStart}></Time>
-    <p class:text-white={!isFiller} class:text-slate-600={isFiller}>to</p>
+    <div class="flex place-items-center gap-3">
+        <Separator class="w-6"></Separator>
+        <p class:text-white={!isFiller} class:text-slate-600={isFiller}>to</p>
+        <Separator class="w-6"></Separator>
+    </div>
     <Time {isFiller} time={timeEnd}></Time>
 </div>

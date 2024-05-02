@@ -21,6 +21,14 @@ As of now, scraping API is not yet available to the public. [diego-yason/scraper
 
 #### OAuth sign-in
 
+To be made.
+
+#### Database (Supabase)
+
+[You can view the schema here.](https://dbdiagram.io/d/Anuna-Sis-Live-Schema-66336fb05b24a634d0542bd3)
+
+Sample CSVs are to be made.
+
 ### Approval
 
 Once your pull request is approved, it will be merged into the `dev` branch, as a form of preview of the next version of the website.

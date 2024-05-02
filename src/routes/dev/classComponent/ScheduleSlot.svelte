@@ -8,7 +8,10 @@
     export let timeEnd: Date;
     export let days: Days[] = [];
     export let isFiller: boolean = false;
+    export let room: string;
     const dayArray = ["M", "T", "W", "H", "F", "S"] as Days[]; // for TS
+
+    if (!isFiller && room == "ROOM") room = "ONLINE";
 </script>
 
 <!-- Days Header -->
@@ -28,4 +31,7 @@
         <Separator class="w-6"></Separator>
     </div>
     <Time {isFiller} time={timeEnd}></Time>
+    <p class="font-geistMono" class:text-white={!isFiller} class:text-slate-600={!isFiller}>
+        {room}
+    </p>
 </div>

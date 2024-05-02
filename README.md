@@ -21,13 +21,17 @@ As of now, scraping API is not yet available to the public. [diego-yason/scraper
 
 #### OAuth sign-in
 
-To be made.
+You do not need to set up Google OAuth. You can use email sign in.
+(An interface will be added soon for dev mode, especially for multi-user testing.)
 
 #### Database (Supabase)
 
+I personally opted to __not__ use RLS and stick with traditional APIs. You will need to do manual authorization
+checks when accessing the database.
+
 [You can view the schema here.](https://dbdiagram.io/d/Anuna-Sis-Live-Schema-66336fb05b24a634d0542bd3)
 
-Sample CSVs are to be made.
+The database has migrations. Refer to [Supabase docs](https://supabase.com/docs/guides/cli/local-development) on how to implement it. Seeding will be added at a later time
 
 ### Approval
 

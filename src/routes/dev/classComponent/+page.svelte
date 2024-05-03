@@ -10,7 +10,7 @@
         room: string;
     }[] = [];
 
-    for (const { startTime, endTime, day, room } of schedule) {
+    for (const { start_time, end_time, day, room } of schedule) {
         const convertTime = (time: string) => {
             const [hour, minute] = time.split(":").map(Number);
             return new Date(0, 0, 0, hour, minute);
@@ -19,15 +19,15 @@
 
         const timeIndex = timeTable.findIndex(
             (time) =>
-                compareTime(time.timeStart, convertTime(startTime!)) &&
-                compareTime(time.timeEnd, convertTime(endTime!)) &&
+                compareTime(time.timeStart, convertTime(start_time!)) &&
+                compareTime(time.timeEnd, convertTime(end_time!)) &&
                 room == time.room,
         );
 
         if (timeIndex == -1) {
             timeTable.push({
-                timeStart: convertTime(startTime!),
-                timeEnd: convertTime(endTime!),
+                timeStart: convertTime(start_time!),
+                timeEnd: convertTime(end_time!),
                 days: [day as "M" | "T" | "W" | "H" | "F" | "S"],
                 room: room ?? "ROOM",
             });

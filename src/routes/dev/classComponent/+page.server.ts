@@ -8,34 +8,45 @@ export const load: PageServerLoad = async () => {
     const { data: courses } = await supabaseAdmin
         .from("courses")
         .select(
-            `classNumber, 
+            `class_number, 
             term,
             enrolled,
             capacity,
             remarks,
             section,
-            faculty (fullName),
-            courseCodes (courseCode)`,
+            faculty (full_name),
+            course_codes (course_code)`,
         )
         .limit(1);
-    const course = courses![0];
+
+    const {
+        capacity,
+        class_number: classNumber,
+        course_codes: courseCodes,
+        enrolled,
+        faculty,
+        remarks,
+        section,
+        term,
+    } = courses![0];
 
     const { data: schedule } = await supabaseAdmin
-        .from("courseSchedules")
+        .from("course_schedules")
         .select("*")
-        .eq("classNumber", course.classNumber!)
-        .eq("term", course.term!);
+        .eq("class_number", classNumber!)
+        .eq("term", term!);
 
     const courseInfo = {
-        classNumber: course.classNumber!,
-        term: course.term!,
-        enrolled: course.enrolled!,
-        capacity: course.capacity!,
-        remarks: course.remarks!,
-        section: course.section!,
-        faculty: course.faculty!.fullName!,
-        courseCode: course.courseCodes!.courseCode,
+        classNumber: classNumber!,
+        term: term!,
+        enrolled: enrolled!,
+        capacity: capacity!,
+        remarks: remarks!,
+        section: section!,
+        faculty: faculty!.full_name,
+        courseCode: courseCodes!.course_code,
     };
+
     return {
         courseInfo,
         schedule: schedule!,

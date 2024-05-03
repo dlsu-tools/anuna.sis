@@ -151,7 +151,8 @@ secret = "env(AUTH_GOOGLE_SECRET)"
 redirect_uri = "http://localhost:54321/auth/v1/callback"
 
 [analytics]
-enabled = false
+# Set enabled to true to see logs in the Logs Explorer
+enabled = true
 port = 54327
 vector_port = 54328
 # Configure one of the supported backends: `postgres`, `bigquery`.

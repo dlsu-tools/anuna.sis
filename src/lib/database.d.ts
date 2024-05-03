@@ -38,186 +38,182 @@ export type Database = {
         Row: {
           acronym: string
           id: number
-          name: string
+          name: string | null
         }
         Insert: {
           acronym: string
           id?: number
-          name: string
+          name?: string | null
         }
         Update: {
           acronym?: string
           id?: number
-          name?: string
+          name?: string | null
         }
         Relationships: []
       }
-      courseCodes: {
+      course_codes: {
         Row: {
-          courseCode: string
+          course_code: string
           created_at: string | null
+          fullName: string | null
           id: number
         }
         Insert: {
-          courseCode: string
+          course_code: string
           created_at?: string | null
+          fullName?: string | null
           id?: number
         }
         Update: {
-          courseCode?: string
+          course_code?: string
           created_at?: string | null
+          fullName?: string | null
           id?: number
         }
         Relationships: []
       }
-      courses: {
+      course_schedules: {
         Row: {
-          capacity: number | null
-          classNumber: number
-          courseCodeId: number
+          class_number: number
           created_at: string | null
-          enrolled: number | null
-          facultyId: number | null
+          day: string
+          end_time: string | null
+          id: number
           last_updated: string | null
-          remarks: string | null
-          section: string | null
+          room: string | null
+          start_time: string | null
           term: number
         }
         Insert: {
-          capacity?: number | null
-          classNumber: number
-          courseCodeId: number
+          class_number: number
           created_at?: string | null
-          enrolled?: number | null
-          facultyId?: number | null
+          day: string
+          end_time?: string | null
+          id?: number
           last_updated?: string | null
-          remarks?: string | null
-          section?: string | null
+          room?: string | null
+          start_time?: string | null
           term: number
         }
         Update: {
-          capacity?: number | null
-          classNumber?: number
-          courseCodeId?: number
+          class_number?: number
           created_at?: string | null
-          enrolled?: number | null
-          facultyId?: number | null
+          day?: string
+          end_time?: string | null
+          id?: number
           last_updated?: string | null
-          remarks?: string | null
-          section?: string | null
+          room?: string | null
+          start_time?: string | null
           term?: number
         }
         Relationships: [
           {
-            foreignKeyName: "courses_courseCodeId_fkey"
-            columns: ["courseCodeId"]
+            foreignKeyName: "course_schedules_class_number_term_fkey"
+            columns: ["class_number", "term"]
             isOneToOne: false
-            referencedRelation: "courseCodes"
+            referencedRelation: "courses"
+            referencedColumns: ["class_number", "term"]
+          },
+        ]
+      }
+      courses: {
+        Row: {
+          capacity: number
+          class_number: number
+          course_code_id: number
+          created_at: string | null
+          enrolled: number
+          faculty_id: number | null
+          last_updated: string | null
+          remarks: string | null
+          section: string
+          term: number
+        }
+        Insert: {
+          capacity: number
+          class_number: number
+          course_code_id: number
+          created_at?: string | null
+          enrolled: number
+          faculty_id?: number | null
+          last_updated?: string | null
+          remarks?: string | null
+          section: string
+          term: number
+        }
+        Update: {
+          capacity?: number
+          class_number?: number
+          course_code_id?: number
+          created_at?: string | null
+          enrolled?: number
+          faculty_id?: number | null
+          last_updated?: string | null
+          remarks?: string | null
+          section?: string
+          term?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "courses_course_code_id_fkey"
+            columns: ["course_code_id"]
+            isOneToOne: false
+            referencedRelation: "course_codes"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "courses_facultyId_fkey"
-            columns: ["facultyId"]
+            foreignKeyName: "courses_faculty_id_fkey"
+            columns: ["faculty_id"]
             isOneToOne: false
             referencedRelation: "faculty"
             referencedColumns: ["id"]
           },
         ]
       }
-      courseSchedules: {
-        Row: {
-          classNumber: number
-          created_at: string
-          day: string | null
-          endTime: string | null
-          id: number
-          last_updated: string | null
-          room: string | null
-          startTime: string | null
-          term: number
-        }
-        Insert: {
-          classNumber: number
-          created_at?: string
-          day?: string | null
-          endTime?: string | null
-          id?: number
-          last_updated?: string | null
-          room?: string | null
-          startTime?: string | null
-          term: number
-        }
-        Update: {
-          classNumber?: number
-          created_at?: string
-          day?: string | null
-          endTime?: string | null
-          id?: number
-          last_updated?: string | null
-          room?: string | null
-          startTime?: string | null
-          term?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "courseSchedules_term_classNumber_fkey"
-            columns: ["term", "classNumber"]
-            isOneToOne: false
-            referencedRelation: "courses"
-            referencedColumns: ["term", "classNumber"]
-          },
-        ]
-      }
       faculty: {
         Row: {
-          created_at: string
-          fullName: string
+          created_at: string | null
+          full_name: string | null
           id: number
         }
         Insert: {
-          created_at?: string
-          fullName: string
+          created_at?: string | null
+          full_name?: string | null
           id?: number
         }
         Update: {
-          created_at?: string
-          fullName?: string
+          created_at?: string | null
+          full_name?: string | null
           id?: number
         }
         Relationships: []
       }
       users: {
         Row: {
-          created_at: string
-          dlsuid: number
-          homeCollege: number
+          created_at: string | null
+          dlsu_id: number
+          home_college: number
           id: string
         }
         Insert: {
-          created_at?: string
-          dlsuid: number
-          homeCollege: number
+          created_at?: string | null
+          dlsu_id: number
+          home_college: number
           id: string
         }
         Update: {
-          created_at?: string
-          dlsuid?: number
-          homeCollege?: number
+          created_at?: string | null
+          dlsu_id?: number
+          home_college?: number
           id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "users_homeCollege_fkey"
-            columns: ["homeCollege"]
+            foreignKeyName: "users_home_college_fkey"
+            columns: ["home_college"]
             isOneToOne: false
             referencedRelation: "colleges"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "users_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "users"
             referencedColumns: ["id"]
           },
         ]
@@ -624,3 +620,4 @@ export type Enums<
   : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
     ? PublicSchema["Enums"][PublicEnumNameOrOptions]
     : never
+

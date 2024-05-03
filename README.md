@@ -4,18 +4,15 @@ An improved enlistment experience.
 
 ## Contributing
 
-__Warning: This section is not complete.__
+**Warning: This section is not complete. Please talk with me directly if you want to contribute for now.**
 
 Thanks for contributing. The public files here is sufficient to start up your own version of the website, along with the (soon to be) public scraper API from [diego-yason/scraper](https://github.com/diego-yason/scraper).
 
-### Preparations
-
-Set up your own Supabase server in their [website](https://supabase.com/). You can name it whatever you want.
-While the project is setting up, the keys Supabase will give you are the keys you need to add to your `.env` file.
+### Preparations & Notes
 
 #### Scraper
 
-__IMPORTANT:__ A scraper is *not* necessary for contributing to this project. There will eventually be a sample data set for you to use and import to your database for development.
+**IMPORTANT:** A scraper is _not_ necessary for contributing to this project. There will eventually be a sample data set for you to use and import to your database for development.
 
 As of now, scraping API is not yet available to the public. [diego-yason/scraper](https://github.com/diego-yason/scraper) to set it up yourself, if interested. You will need to change any urls that point to `scraper.12308978.xyz` to whatever domain your own version of the scraper is hosted on.
 
@@ -24,14 +21,25 @@ As of now, scraping API is not yet available to the public. [diego-yason/scraper
 You do not need to set up Google OAuth. You can use email sign in.
 (An interface will be added soon for dev mode, especially for multi-user testing.)
 
-#### Database (Supabase)
+#### Database
 
-I personally opted to __not__ use RLS and stick with traditional APIs. You will need to do manual authorization
+I personally opted to **not** use RLS and stick with traditional APIs. You will need to do manual authorization
 checks when accessing the database.
 
 [You can view the schema here.](https://dbdiagram.io/d/Anuna-Sis-Live-Schema-66336fb05b24a634d0542bd3)
 
-The database has migrations. Refer to [Supabase docs](https://supabase.com/docs/guides/cli/local-development) on how to implement it. Seeding will be added at a later time
+### Guide
+
+You can refer to to [Supabase docs](https://supabase.com/docs/guides/cli/local-development) on how to set up the local server. I've also included a guide here.
+
+If anything goes wrong in this guide, feel free to contact me.
+
+Requirements:
+
+- [Docker Desktop](https://docs.docker.com/get-docker/)
+- [Node v18](https://nodejs.org/en/download)
+- pnpm (done via `npm i -g pnpm`)
+- NPM Packages (`pnpm i`)
 
 ### Approval
 

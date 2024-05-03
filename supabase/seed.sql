@@ -18,9 +18,11 @@ VALUES
 INSERT INTO
     course_codes (course_code)
 VALUES
-    ('ABCDEFG'),
     ('COURSE1'),
-    ('COURSE2');
+    ('COURSE2'),
+    ('COURSE3'),
+    ('GNERIC1'),
+    ('GNERIC2');
 
 INSERT INTO
     faculty(full_name)

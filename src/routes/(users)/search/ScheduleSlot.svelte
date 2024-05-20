@@ -31,7 +31,7 @@
         <Separator class="w-6"></Separator>
     </div>
     <Time {isFiller} time={timeEnd}></Time>
-    <p class="font-geistMono" class:text-white={!isFiller} class:text-slate-600={!isFiller}>
-        {room}
+    <p class="font-geistMono" class:text-white={room?.length} class:text-slate-600={!room?.length}>
+        {room ?? "XX000X"}
     </p>
 </div>

@@ -1,54 +1,52 @@
 import type { PageServerLoad } from "./$types";
 import { supabaseAdmin } from "$lib/server/supabaseAdmin";
+import { error } from "@sveltejs/kit";
 
-export const load: PageServerLoad = async () => {
-    // Get course data
+export const load: PageServerLoad = async ({ url: { searchParams } }) => {
+    // Default data pool
+    const size = Number(searchParams.get("size") ?? "10");
+    const page = Number(searchParams.get("page") ?? "1");
 
-    // gross amounts of non-null assertions because dev mode
-    const { data: courses } = await supabaseAdmin
+    const { data, error: supabaseError } = await supabaseAdmin
         .from("courses")
         .select(
-            `class_number, 
-            term,
-            enrolled,
-            capacity,
-            remarks,
-            section,
-            faculty (full_name),
-            course_codes (course_code)`,
+            "class_number, enrolled, capacity, remarks, section, faculty (full_name), course_codes (course_code)",
         )
-        .limit(1);
+        .order("last_updated", { ascending: false })
+        .limit(10)
+        .range((page - 1) * size, page * size - 1);
 
-    const {
-        capacity,
-        class_number: classNumber,
-        course_codes: courseCodes,
-        enrolled,
-        faculty,
-        remarks,
-        section,
-        term,
-    } = courses![0];
+    if (supabaseError) error(500, supabaseError.message);
 
-    const { data: schedule } = await supabaseAdmin
-        .from("course_schedules")
-        .select("*")
-        .eq("class_number", classNumber!)
-        .eq("term", term!);
+    const parsed = await Promise.all(
+        data.map(async (course) => {
+            if (!course.course_codes?.course_code)
+                console.warn("Missing course code", course.class_number);
+            // TODO: add actual warning API or something
 
-    const courseInfo = {
-        classNumber: classNumber!,
-        term: term!,
-        enrolled: enrolled!,
-        capacity: capacity!,
-        remarks: remarks!,
-        section: section!,
-        faculty: faculty!.full_name,
-        courseCode: courseCodes!.course_code,
-    };
+            const { data: scheduleData, error: scheduleError } = await supabaseAdmin
+                .from("course_schedules")
+                .select("start_time, end_time, room, day")
+                .eq("class_number", course.class_number)
+                .eq("term", "1233");
 
-    return {
-        courseInfo,
-        schedule: schedule!,
-    };
+            if (scheduleError) error(500, scheduleError.message);
+
+            return {
+                classNumber: course.class_number,
+                enrolled: course.enrolled,
+                capacity: course.capacity,
+                remarks: course.remarks ?? "",
+                section: course.section,
+                faculty: course.faculty?.full_name ?? "Unassigned / Blind",
+                courseCode: course.course_codes?.course_code ?? "???????",
+                schedule: scheduleData.sort((a, b) => {
+                    const days = "MTWHFS";
+                    return days.indexOf(a.day) - days.indexOf(b.day);
+                }),
+            };
+        }),
+    );
+
+    return { parsed };
 };
